@@ -27,7 +27,7 @@
     hud.innerHTML = '<tr><td colspan="3" class="py-10 text-center text-yellow-500 animate-pulse uppercase">Syncing with Empire Database...</td></tr>';
     
     try {
-        // Replace with your Google Sheet API or Webhook Response URL
+        // https://api.steinhq.com/v1/storages/69dd55e63807a370b048991d
         const response = await fetch('YOUR_RESULTS_API_URL'); 
         const data = await response.json();
         
