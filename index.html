@@ -3,108 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMPIRE AI | AUTOPILOT</title>
+    <title>EMPIRE AI | PREDICTIVE INTEL</title>
     <style>
-        :root { --blue: #0070f3; --green: #00ff00; --red: #ff0055; --bg: #050505; --card: #111; }
-        body { background: var(--bg); color: white; font-family: 'Courier New', monospace; margin: 0; padding: 15px; overflow-x: hidden; }
+        :root { --blue: #00d2ff; --green: #39ff14; --orange: #ffaa00; --bg: #000; --card: #0c0c0c; }
+        body { background: var(--bg); color: white; font-family: 'Helvetica Neue', sans-serif; margin: 0; padding: 15px; }
         
-        /* SCANNED OVERLAY */
-        .scan-line { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: rgba(0, 255, 0, 0.2); box-shadow: 0 0 10px var(--green); animation: scan 3s linear infinite; z-index: 999; pointer-events: none; }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100vh; } }
-
-        .header { border-left: 4px solid var(--red); padding-left: 15px; margin-bottom: 20px; }
-        .alert-text { color: var(--red); font-size: 0.7rem; font-weight: bold; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        .big-stat { background: var(--card); border: 1px solid #222; border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; }
-        .timer { font-size: 2rem; color: var(--red); font-weight: bold; margin-bottom: 5px; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #111; padding-bottom: 10px; margin-bottom: 20px; }
+        .glitch-text { font-weight: 900; letter-spacing: 2px; color: var(--blue); font-size: 1.2rem; }
         
-        .lead-container { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 20px; }
-        .data-row { border-bottom: 1px solid #222; padding: 15px 0; }
-        .terminal-text { color: var(--green); font-size: 0.9rem; margin-top: 10px; min-height: 40px; }
-        .wallet { color: var(--green); font-weight: bold; border: 1px solid var(--green); padding: 2px 5px; border-radius: 4px; }
+        .grid-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: var(--card); border: 1px solid #222; padding: 10px; border-radius: 8px; text-align: center; }
+        .stat-label { font-size: 0.5rem; color: #666; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-value { font-size: 1rem; font-weight: bold; color: var(--green); }
+
+        .lead-feed { width: 100%; max-width: 500px; margin: 0 auto; }
+        .intel-card { background: var(--card); border-left: 4px solid var(--blue); margin-bottom: 15px; padding: 15px; border-radius: 0 10px 10px 0; position: relative; overflow: hidden; }
+        .intel-card::after { content: ""; position: absolute; top: 0; right: 0; width: 30px; height: 100%; background: linear-gradient(to right, transparent, rgba(0, 210, 255, 0.05)); }
+        
+        .target-id { font-size: 0.6rem; color: var(--orange); margin-bottom: 5px; font-family: monospace; }
+        .company-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 10px; }
+        
+        .recovery-metrics { display: flex; gap: 10px; margin-top: 10px; }
+        .metric { font-size: 0.7rem; background: #1a1a1a; padding: 5px 8px; border-radius: 4px; border: 1px solid #333; }
+        .recovery-val { color: var(--green); font-weight: bold; }
     </style>
 </head>
-<body onload="startAutomation()">
-
-    <div class="scan-line"></div>
+<body onload="initSystem()">
 
     <div class="header">
-        <h1 style="font-size: 1.2rem; letter-spacing: 2px; margin:0;">EMPIRE AI // AUTO-PITCH</h1>
-        <div class="alert-text">ATTENTION: LIVE REVENUE LEAK DETECTED</div>
+        <div class="glitch-text">EMPIRE // INTEL</div>
+        <div id="clock" style="font-size: 0.8rem; font-family: monospace; color: #444;"></div>
     </div>
 
-    <div class="big-stat">
-        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase;">Recovery Window Closing:</div>
-        <div class="timer" id="countdown">04:59</div>
-        <div style="font-size: 0.6rem; color: var(--red);">SATELLITE RE-ENTRY IN PROGRESS</div>
+    <div class="grid-container">
+        <div class="stat-box">
+            <div class="stat-label">Network Load</div>
+            <div class="stat-value" id="load">94.2%</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">Waste Detected</div>
+            <div class="stat-value" style="color:var(--orange)" id="waste">$184k</div>
+        </div>
     </div>
 
-    <div class="lead-container" id="feed">
-        <div style="text-align: center; color: #444;">INITIALIZING...</div>
+    <div class="lead-feed" id="feed">
+        <div style="text-align: center; color: #222;">SCANNING SATELLITE CHANNELS...</div>
     </div>
 
     <script>
-        // 1. AUTO-TIMER
-        function startTimer() {
-            let time = 299;
-            setInterval(() => {
-                let mins = Math.floor(time / 60);
-                let secs = time % 60;
-                document.getElementById('countdown').innerText = `0${mins}:${secs < 10 ? '0' : ''}${secs}`;
-                if (time > 0) time--;
-            }, 1000);
+        function updateStats() {
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+            document.getElementById('load').innerText = (90 + Math.random() * 9).toFixed(1) + "%";
+            // Randomly update waste to look alive
+            if(Math.random() > 0.8) {
+                let current = parseInt(document.getElementById('waste').innerText.replace('$', '').replace('k', ''));
+                document.getElementById('waste').innerText = "$" + (current + 1) + "k";
+            }
         }
 
-        // 2. AUTO-DATA FETCH
-        async function startAutomation() {
-            startTimer();
+        async function initSystem() {
+            setInterval(updateStats, 1000);
+            fetchData();
+            setInterval(fetchData, 300000); // 5 min auto-refresh
+        }
+
+        async function fetchData() {
             const container = document.getElementById('feed');
             const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=281204146&single=true&output=csv';
 
             try {
                 const response = await fetch(url);
                 const data = await response.text();
-                const rows = data.split('\n');
+                const rows = data.split('\n').slice(1);
                 container.innerHTML = '';
 
-                for (let i = 1; i < rows.length; i++) {
-                    const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if (columns.length >= 2) {
-                        let lead = columns[0].replace(/"/g, "").trim();
-                        let hook = columns[1].replace(/"/g, "").trim();
-                        hook = hook.replace(/ni57q/g, '<span class="wallet">ni57q</span>');
-
+                rows.forEach((row, index) => {
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if (cols.length >= 2) {
+                        let lead = cols[0].replace(/"/g, "").trim();
+                        let hook = cols[1].replace(/"/g, "").trim();
+                        
+                        // Split hook into metrics if you use a specific format, 
+                        // or just show the text as "Operational Logic"
                         container.innerHTML += `
-                            <div class="data-row">
-                                <div style="color:var(--blue); font-size:0.8rem;">TARGET: ${lead}</div>
-                                <div class="terminal-text" id="typewriter-${i}"></div>
+                            <div class="intel-card">
+                                <div class="target-id">SATELLITE_FIX_0${index + 1}</div>
+                                <div class="company-name">${lead}</div>
+                                <div style="font-size: 0.75rem; color: #888; line-height: 1.4;">${hook}</div>
+                                <div class="recovery-metrics">
+                                    <div class="metric">REC_RATE: <span class="recovery-val">88%</span></div>
+                                    <div class="metric">SETTLEMENT: <span class="recovery-val">ni57q</span></div>
+                                </div>
                             </div>
                         `;
-                        
-                        // Start the silent typing effect
-                        typeEffect(`typewriter-${i}`, hook);
                     }
-                }
+                });
             } catch (e) {
-                container.innerHTML = "OFFLINE";
+                container.innerHTML = "SYSTEM ERROR";
             }
-        }
-
-        function typeEffect(elementId, text) {
-            let i = 0;
-            const speed = 40; 
-            function type() {
-                if (i < text.length) {
-                    document.getElementById(elementId).innerHTML += text.charAt(i);
-                    i++;
-                    setTimeout(type, speed);
-                }
-            }
-            type();
         }
     </script>
 </body>
 </html>
-
-
