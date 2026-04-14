@@ -3,173 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMPIRE AI | HUD</title>
+    <title>EMPIRE AI | AUTOPILOT</title>
     <style>
-        :root {
-            --neon-blue: #0070f3;
-            --neon-green: #00ff00;
-            --bg-black: #050505;
-            --card-gray: #111111;
-        }
+        :root { --blue: #0070f3; --green: #00ff00; --red: #ff0055; --bg: #050505; --card: #111; }
+        body { background: var(--bg); color: white; font-family: 'Courier New', monospace; margin: 0; padding: 15px; overflow-x: hidden; }
+        
+        /* SCANNED OVERLAY */
+        .scan-line { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: rgba(0, 255, 0, 0.2); box-shadow: 0 0 10px var(--green); animation: scan 3s linear infinite; z-index: 999; pointer-events: none; }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100vh; } }
 
-        body {
-            background-color: var(--bg-black);
-            color: white;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .header { border-left: 4px solid var(--red); padding-left: 15px; margin-bottom: 20px; }
+        .alert-text { color: var(--red); font-size: 0.7rem; font-weight: bold; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        .header {
-            width: 100%;
-            max-width: 400px;
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 1.5rem;
-            letter-spacing: 2px;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .status-bar {
-            display: flex;
-            align-items: center;
-            font-size: 0.8rem;
-            color: var(--neon-green);
-            margin-top: 5px;
-        }
-
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            background-color: var(--neon-green);
-            border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 10px var(--neon-green);
-        }
-
-        .btn-sync {
-            width: 100%;
-            max-width: 400px;
-            background: var(--neon-green);
-            color: black;
-            border: none;
-            padding: 18px;
-            border-radius: 12px;
-            font-weight: bold;
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 400px;
-            background: var(--card-gray);
-            border: 1px solid #333;
-            border-radius: 16px;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-
-        .data-row {
-            border-bottom: 1px solid #222;
-            padding: 15px 0;
-        }
-
-        .data-row:last-child { border-bottom: none; }
-
-        .lead-name {
-            font-weight: bold;
-            font-size: 1.1rem;
-            color: white;
-        }
-
-        .status-text {
-            color: var(--neon-blue);
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-top: 4px;
-        }
-
-        .hook-box {
-            margin-top: 12px;
-            color: #ccc;
-            line-height: 1.4;
-            font-size: 0.9rem;
-            background: #1a1a1a;
-            padding: 10px;
-            border-radius: 8px;
-            border-left: 3px solid var(--neon-blue);
-        }
-
-        .wallet-tag {
-            color: var(--neon-green);
-            font-weight: bold;
-        }
+        .big-stat { background: var(--card); border: 1px solid #222; border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; }
+        .timer { font-size: 2rem; color: var(--red); font-weight: bold; margin-bottom: 5px; }
+        
+        .lead-container { background: var(--card); border: 1px solid #333; border-radius: 12px; padding: 20px; }
+        .data-row { border-bottom: 1px solid #222; padding: 15px 0; }
+        .terminal-text { color: var(--green); font-size: 0.9rem; margin-top: 10px; min-height: 40px; }
+        .wallet { color: var(--green); font-weight: bold; border: 1px solid var(--green); padding: 2px 5px; border-radius: 4px; }
     </style>
 </head>
-<body>
+<body onload="startAutomation()">
+
+    <div class="scan-line"></div>
 
     <div class="header">
-        <h1>EMPIRE AI</h1>
-        <div class="status-bar"><span class="status-dot"></span> DIRECT SATELLITE FEED</div>
+        <h1 style="font-size: 1.2rem; letter-spacing: 2px; margin:0;">EMPIRE AI // AUTO-PITCH</h1>
+        <div class="alert-text">ATTENTION: LIVE REVENUE LEAK DETECTED</div>
     </div>
 
-    <button class="btn-sync" onclick="fetchData()">SYNC HUD DATA</button>
+    <div class="big-stat">
+        <div style="font-size: 0.7rem; color: #888; text-transform: uppercase;">Recovery Window Closing:</div>
+        <div class="timer" id="countdown">04:59</div>
+        <div style="font-size: 0.6rem; color: var(--red);">SATELLITE RE-ENTRY IN PROGRESS</div>
+    </div>
 
-    <div class="card" id="lead-container">
-        <div style="color: #444; text-align: center; padding: 20px;">READY FOR SYNC</div>
+    <div class="lead-container" id="feed">
+        <div style="text-align: center; color: #444;">INITIALIZING...</div>
     </div>
 
     <script>
-        async function fetchData() {
-            const container = document.getElementById('lead-container');
-            container.innerHTML = '<div style="color: var(--neon-blue); text-align: center; padding: 20px;">STREAMING DATA...</div>';
-            
-            // Your direct CSV export link
+        // 1. AUTO-TIMER
+        function startTimer() {
+            let time = 299;
+            setInterval(() => {
+                let mins = Math.floor(time / 60);
+                let secs = time % 60;
+                document.getElementById('countdown').innerText = `0${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                if (time > 0) time--;
+            }, 1000);
+        }
+
+        // 2. AUTO-DATA FETCH
+        async function startAutomation() {
+            startTimer();
+            const container = document.getElementById('feed');
             const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=281204146&single=true&output=csv';
 
             try {
                 const response = await fetch(url);
                 const data = await response.text();
                 const rows = data.split('\n');
-                
-                // Clear container
                 container.innerHTML = '';
 
-                // Loop through rows (skipping header row 0)
                 for (let i = 1; i < rows.length; i++) {
-                    const columns = rows[i].split(',');
+                    const columns = rows[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (columns.length >= 2) {
-                        let lead = columns[0].trim();
-                        let hook = columns[1].trim();
-
-                        // Glow ni57q tag
-                        hook = hook.replace(/ni57q/g, '<span class="wallet-tag">ni57q</span>');
+                        let lead = columns[0].replace(/"/g, "").trim();
+                        let hook = columns[1].replace(/"/g, "").trim();
+                        hook = hook.replace(/ni57q/g, '<span class="wallet">ni57q</span>');
 
                         container.innerHTML += `
                             <div class="data-row">
-                                <div class="lead-name">${lead}</div>
-                                <div class="status-text">TARGET ACQUIRED</div>
-                                <div class="hook-box">${hook}</div>
+                                <div style="color:var(--blue); font-size:0.8rem;">TARGET: ${lead}</div>
+                                <div class="terminal-text" id="typewriter-${i}"></div>
                             </div>
                         `;
+                        
+                        // Start the silent typing effect
+                        typeEffect(`typewriter-${i}`, hook);
                     }
                 }
-            } catch (error) {
-                container.innerHTML = '<div style="color: red; text-align: center; padding: 20px;">CONNECTION FAILED</div>';
+            } catch (e) {
+                container.innerHTML = "OFFLINE";
             }
+        }
+
+        function typeEffect(elementId, text) {
+            let i = 0;
+            const speed = 40; 
+            function type() {
+                if (i < text.length) {
+                    document.getElementById(elementId).innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
         }
     </script>
 </body>
 </html>
+
 
