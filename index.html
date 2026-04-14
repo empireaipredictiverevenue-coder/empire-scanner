@@ -142,31 +142,34 @@
             container.innerHTML = '<div style="color: var(--neon-blue); text-align: center; padding: 20px;">UPLOADING SATELLITE DATA...</div>';
             
             try {
-                // NEW VERIFIED API ENDPOINT
-                const response = await fetch('https://api.steinhq.com/v1/storages/69de4ef33807a370b0495cbb/Leads');
+                // VERIFIED NEW API ENDPOINT
+                const response = await fetch('https://api.steinhq.com/v1/storages/69de57bb3807a370b0496a60/Leads');
                 const data = await response.json();
                 
-                if (data.length > 0) {
+                if (data && data.length > 0) {
                     container.innerHTML = '';
                     data.forEach(item => {
-                        let displayHook = item.hook || "No hook found in sheet.";
+                        // Case-insensitive check for 'lead' and 'hook'
+                        let leadVal = item.lead || item.Lead || 'Target Unknown';
+                        let hookVal = item.hook || item.Hook || "No hook found in sheet.";
+                        
                         // Format the ni57q tag to glow green
-                        displayHook = displayHook.replace(/ni57q/g, '<span class="wallet-tag">ni57q</span>');
+                        hookVal = hookVal.replace(/ni57q/g, '<span class="wallet-tag">ni57q</span>');
 
                         container.innerHTML += `
                             <div class="data-row">
                                 <div style="display: flex; justify-content: space-between; align-items: start;">
                                     <div>
-                                        <div class="lead-name">${item.lead || 'Target Unknown'}</div>
+                                        <div class="lead-name">${leadVal}</div>
                                         <div class="status-text">TARGET ACQUIRED</div>
                                     </div>
                                 </div>
-                                <div class="hook-box">${displayHook}</div>
+                                <div class="hook-box">${hookVal}</div>
                             </div>
                         `;
                     });
                 } else {
-                    container.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">Sheet Data Not Found. Check Tab Name "Leads".</div>';
+                    container.innerHTML = '<div style="color: #666; text-align: center; padding: 20px;">No data in "Leads" tab.</div>';
                 }
             } catch (error) {
                 container.innerHTML = '<div style="color: red; text-align: center; padding: 20px;">CONNECTION ERROR</div>';
