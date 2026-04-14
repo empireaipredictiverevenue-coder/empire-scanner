@@ -9,164 +9,178 @@
             --empire-blue: #00d2ff; 
             --settlement-green: #39ff14; 
             --deep-bg: #000000; 
-            --panel-gray: #0a0a0a; 
-            --text-dim: #888; /* Increased brightness for better visibility */
+            --panel: #0d0d0d; 
+            --high-vis-text: #ffffff; /* Shifted to white for readability */
+            --sub-text: #b0b0b0; /* Lightened gray for secondary data */
         }
         
         body { 
             background: var(--deep-bg); 
-            color: white; 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; 
+            color: var(--high-vis-text); 
+            font-family: -apple-system, system-ui, sans-serif; 
             margin: 0; 
             padding: 15px; 
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* HEADER */
         .header { 
             display: flex; 
             justify-content: space-between; 
             align-items: center; 
-            padding: 20px 0; 
-            border-bottom: 1px solid #222; 
-            margin-bottom: 30px; 
+            padding: 15px 0; 
+            border-bottom: 1px solid #333; 
+            margin-bottom: 25px; 
         }
         
-        .logo-text { font-weight: 900; font-size: 1.2rem; letter-spacing: 5px; text-transform: uppercase; }
+        .logo-text { font-weight: 900; font-size: 1.1rem; letter-spacing: 4px; text-transform: uppercase; }
         .logo-accent { color: var(--empire-blue); }
 
-        .sys-status { display: flex; align-items: center; font-size: 0.65rem; color: var(--settlement-green); font-weight: bold; }
-        .pulse-dot { height: 7px; width: 7px; background: var(--settlement-green); border-radius: 50%; margin-right: 10px; box-shadow: 0 0 12px var(--settlement-green); animation: pulse-ring 2s infinite; }
-        @keyframes pulse-ring { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .sys-status { display: flex; align-items: center; font-size: 0.7rem; color: var(--settlement-green); font-weight: bold; }
+        .pulse-dot { height: 8px; width: 8px; background: var(--settlement-green); border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px var(--settlement-green); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        .analytics-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-        .stat-card { background: var(--panel-gray); border: 1px solid #222; padding: 18px; border-radius: 12px; }
-        .stat-label { font-size: 0.55rem; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1.5px; }
-        .stat-value { font-size: 1.3rem; font-weight: 700; font-family: monospace; }
+        /* ANALYTICS */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .stat-card { background: var(--panel); border: 1px solid #222; padding: 15px; border-radius: 10px; }
+        .stat-label { font-size: 0.6rem; color: var(--empire-blue); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px; font-weight: bold; }
+        .stat-value { font-size: 1.2rem; font-weight: 700; font-family: monospace; }
 
-        .feed-label { font-size: 0.7rem; color: #444; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 3px; display: flex; align-items: center; }
-        .feed-label::after { content: ""; height: 1px; flex-grow: 1; background: #222; margin-left: 15px; }
-
+        /* DATA CARDS */
         .entity-card { 
-            background: var(--panel-gray); 
+            background: var(--panel); 
             border: 1px solid #222; 
             margin-bottom: 15px; 
-            border-radius: 14px; 
+            border-radius: 12px; 
             overflow: hidden; 
         }
         
-        /* FIX: Increased contrast for the meta labels */
+        /* FIX: High-contrast Meta Bar */
         .entity-meta { 
-            background: #111; 
-            padding: 12px 18px; 
+            background: #1a1a1a; 
+            padding: 10px 15px; 
             display: flex; 
             justify-content: space-between; 
-            font-size: 0.65rem; 
-            color: var(--empire-blue); /* Changed to blue for maximum visibility */
+            font-size: 0.7rem; 
+            color: #fff; /* White text for ID and Status */
             font-family: monospace; 
-            letter-spacing: 1px;
             font-weight: bold;
+            border-bottom: 1px solid #222;
         }
 
-        .entity-body { padding: 22px; }
-        .entity-title { font-size: 1.5rem; font-weight: 800; margin-bottom: 12px; }
-        .entity-diagnostic { font-size: 1rem; color: #bbb; line-height: 1.6; }
+        .entity-body { padding: 20px; }
+        .entity-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: #fff; }
+        .entity-diagnostic { font-size: 0.95rem; color: var(--sub-text); line-height: 1.5; }
         
-        .settlement-tag { 
+        .ni-tag { 
             color: var(--settlement-green); 
             font-weight: bold; 
-            background: rgba(57, 255, 20, 0.15); 
-            padding: 2px 6px; 
+            background: rgba(57, 255, 20, 0.1); 
+            padding: 2px 5px; 
             border-radius: 4px; 
+            border: 1px solid rgba(57, 255, 20, 0.2);
         }
 
-        .ops-log { margin-top: 25px; background: #050505; border-top: 1px solid #222; padding: 15px; font-family: monospace; font-size: 0.65rem; color: #555; height: 50px; overflow: hidden; }
+        /* FIX: Readable Operations Log */
+        .ops-log { 
+            margin-top: 30px; 
+            background: #0a0a0a; 
+            border: 1px solid #222; 
+            padding: 12px; 
+            font-family: monospace; 
+            font-size: 0.75rem; /* Increased size */
+            color: var(--empire-blue); /* High vis blue */
+            height: 70px; 
+            overflow: hidden; 
+            border-radius: 8px;
+        }
     </style>
 </head>
-<body onload="bootSystem()">
+<body onload="init()">
 
     <div class="header">
         <div class="logo-text">EMPIRE<span class="logo-accent">AI</span></div>
-        <div class="sys-status"><div class="pulse-dot"></div> CORE LINK ACTIVE</div>
+        <div class="sys-status"><div class="pulse-dot"></div> UPLINK: OPTIMAL</div>
     </div>
 
-    <div class="analytics-row">
+    <div class="grid">
         <div class="stat-card">
-            <div class="stat-label">SYSTEM INTEGRITY</div>
+            <div class="stat-label">INTEGRITY</div>
             <div class="stat-value" id="uptime">99.99%</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">TOTAL SETTLEMENT</div>
-            <div class="stat-value" style="color:var(--settlement-green)" id="rev-total">$482,100</div>
+            <div class="stat-label">REVENUE</div>
+            <div class="stat-value" style="color:var(--settlement-green)" id="rev">$482,100</div>
         </div>
     </div>
 
-    <div class="feed-label">Logic Streams</div>
-    <div id="intel-stream">
-        <div style="text-align: center; color: #333; padding: 50px;">INITIALIZING CORE FEED...</div>
+    <div id="core-feed">
+        <div style="text-align: center; color: #444; padding: 40px;">INITIALIZING CORE FEED...</div>
     </div>
 
     <div class="ops-log" id="ops-log">
-        <div>> UPLINK ESTABLISHED...</div>
+        <div>[ SYSTEM_START ]</div>
     </div>
 
     <script>
-        const systemLogs = ["SATELLITE HANDSHAKE VERIFIED", "SYNCING SETTLEMENT LAYER: ni57q", "LOGISTICS DATASTREAM ENCRYPTED"];
+        const logs = ["[ ENCRYPTION_ACTIVE ]", "[ SATELLITE_LINK_SECURED ]", "[ DATA_STREAM_SYNCED ]", "[ NI57Q_SETTLEMENT_LIVE ]"];
 
         function runLogs() {
             const logBox = document.getElementById('ops-log');
             const entry = document.createElement('div');
-            entry.innerText = "> " + systemLogs[Math.floor(Math.random() * systemLogs.length)];
+            entry.innerText = "> " + logs[Math.floor(Math.random() * logs.length)];
             logBox.prepend(entry);
-            if (logBox.children.length > 3) logBox.lastChild.remove();
+            if (logBox.children.length > 4) logBox.lastChild.remove();
         }
 
-        function updateAnalytics() {
-            document.getElementById('uptime').innerText = (99.96 + Math.random() * 0.03).toFixed(2) + "%";
+        function updateMetrics() {
+            document.getElementById('uptime').innerText = (99.97 + Math.random() * 0.02).toFixed(2) + "%";
             if(Math.random() > 0.8) {
-                let current = parseInt(document.getElementById('rev-total').innerText.replace('$', '').replace(',', ''));
-                document.getElementById('rev-total').innerText = "$" + (current + 250).toLocaleString();
+                let val = parseInt(document.getElementById('rev').innerText.replace('$', '').replace(',', ''));
+                document.getElementById('rev').innerText = "$" + (val + 50).toLocaleString();
             }
         }
 
-        async function bootSystem() {
-            setInterval(updateAnalytics, 3000);
-            setInterval(runLogs, 5000);
-            await streamData();
-            setInterval(streamData, 60000);
+        async function init() {
+            setInterval(updateMetrics, 3000);
+            setInterval(runLogs, 4000);
+            await stream();
+            setInterval(stream, 60000);
         }
 
-        async function streamData() {
-            const container = document.getElementById('intel-stream');
+        async function stream() {
+            const container = document.getElementById('core-feed');
             const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=281204146&single=true&output=csv';
 
             try {
                 const response = await fetch(url);
                 const csv = await response.text();
-                const entries = csv.split('\n').slice(1);
+                const rows = csv.split('\n').slice(1);
                 container.innerHTML = '';
 
-                entries.forEach((row, i) => {
+                rows.forEach((row, i) => {
                     const data = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (data.length >= 2) {
-                        let entity = data[0].replace(/"/g, "").trim();
-                        let diagnostic = data[1].replace(/"/g, "").trim();
-                        diagnostic = diagnostic.replace(/ni57q/g, '<span class="settlement-tag">ni57q</span>');
+                        let title = data[0].replace(/"/g, "").trim();
+                        let text = data[1].replace(/"/g, "").trim();
+                        text = text.replace(/ni57q/g, '<span class="ni-tag">ni57q</span>');
 
                         container.innerHTML += `
                             <div class="entity-card">
                                 <div class="entity-meta">
                                     <span>SYSTEM_ID: 00${i+1}</span>
-                                    <span>STATUS: OPTIMAL</span>
+                                    <span style="color:var(--settlement-green)">LIVE_FEED</span>
                                 </div>
                                 <div class="entity-body">
-                                    <div class="entity-title">${entity}</div>
-                                    <div class="entity-diagnostic">${diagnostic}</div>
+                                    <div class="entity-title">${title}</div>
+                                    <div class="entity-diagnostic">${text}</div>
                                 </div>
                             </div>
                         `;
                     }
                 });
             } catch (e) {
-                container.innerHTML = "<div style='color:red; text-align:center;'>UPLINK FAILURE</div>";
+                container.innerHTML = "CONNECTION ERROR";
             }
         }
     </script>
