@@ -3,104 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMPIRE AI | OPERATIONAL TERMINAL</title>
+    <title>EMPIRE // EXECUTIVE TERMINAL</title>
     <style>
-        :root { --accent: #00d2ff; --gain: #39ff14; --warning: #ffaa00; --bg: #000; --panel: #0a0a0a; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; margin: 0; padding: 15px; letter-spacing: -0.02em; }
+        :root { --accent: #00d2ff; --gain: #39ff14; --warning: #ff4444; --bg: #000; --panel: #0a0a0a; }
+        body { background: var(--bg); color: white; font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 15px; overflow-x: hidden; }
         
-        /* TOP BAR */
-        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #1a1a1a; margin-bottom: 20px; }
-        .brand { font-weight: 800; font-size: 0.9rem; letter-spacing: 3px; color: #fff; }
-        .live-tag { font-size: 0.6rem; background: rgba(57, 255, 20, 0.1); color: var(--gain); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--gain); }
+        /* TOP HUD */
+        .top-nav { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid #1a1a1a; margin-bottom: 25px; }
+        .brand { font-weight: 900; font-size: 1rem; letter-spacing: 4px; color: #fff; }
+        .status-pulse { height: 8px; width: 8px; background: var(--gain); border-radius: 50%; margin-right: 8px; box-shadow: 0 0 12px var(--gain); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* INTEL GRID */
-        .intel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-card { background: var(--panel); border: 1px solid #111; padding: 12px; border-radius: 6px; }
-        .label { font-size: 0.5rem; color: #555; text-transform: uppercase; margin-bottom: 4px; }
-        .value { font-size: 1.1rem; font-weight: 700; font-family: monospace; }
+        /* ANALYTICS */
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
+        .stat-card { background: var(--panel); border: 1px solid #111; padding: 15px; border-radius: 10px; }
+        .label { font-size: 0.55rem; color: #555; text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px; }
+        .value { font-size: 1.2rem; font-weight: 700; font-family: 'SF Mono', monospace; }
 
-        /* ENTITY FEED */
-        .entity-feed { width: 100%; max-width: 500px; margin: 0 auto; }
-        .entity-box { background: var(--panel); border: 1px solid #1a1a1a; margin-bottom: 15px; border-radius: 8px; overflow: hidden; }
-        .entity-header { background: #111; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a1a1a; }
-        .entity-id { font-size: 0.6rem; color: var(--accent); font-family: monospace; }
-        .entity-body { padding: 15px; }
-        .entity-name { font-size: 1.1rem; font-weight: 700; margin-bottom: 8px; }
-        .logic-stream { font-size: 0.85rem; color: #aaa; line-height: 1.5; font-family: monospace; }
+        /* DATA FEED */
+        .feed-header { font-size: 0.7rem; color: #333; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 2px; border-left: 2px solid var(--accent); padding-left: 10px; }
+        .entity-box { background: var(--panel); border: 1px solid #151515; margin-bottom: 15px; border-radius: 12px; overflow: hidden; animation: slideIn 0.5s ease-out; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .settlement-badge { display: inline-block; margin-top: 10px; font-size: 0.7rem; color: var(--gain); border: 1px solid var(--gain); padding: 2px 6px; border-radius: 3px; }
+        .entity-top { background: #0e0e0e; padding: 10px 15px; display: flex; justify-content: space-between; font-size: 0.6rem; color: #444; font-family: monospace; }
+        .entity-body { padding: 20px; }
+        .entity-name { font-size: 1.3rem; font-weight: 800; margin-bottom: 12px; color: #fff; }
+        .diagnostic-text { font-size: 0.95rem; color: #bbb; line-height: 1.6; }
+        
+        .ni-tag { color: var(--gain); font-weight: bold; background: rgba(57, 255, 20, 0.1); padding: 2px 4px; border-radius: 4px; }
     </style>
 </head>
-<body onload="initSystem()">
+<body onload="init()">
 
     <div class="top-nav">
         <div class="brand">EMPIRE // CORE</div>
-        <div class="live-tag">UPLINK ACTIVE</div>
-    </div>
-
-    <div class="intel-grid">
-        <div class="stat-card">
-            <div class="label">Processing Efficiency</div>
-            <div class="value" id="efficiency">99.8%</div>
-        </div>
-        <div class="stat-card">
-            <div class="label">Revenue Recovered</div>
-            <div class="value" style="color:var(--gain)" id="rev">$281,400</div>
+        <div style="display: flex; align-items: center; font-size: 0.6rem; color: var(--gain); font-weight: bold;">
+            <div class="status-pulse"></div> AUTONOMOUS FEED
         </div>
     </div>
 
-    <div class="entity-feed" id="main-feed">
-        <div style="text-align: center; color: #333; font-size: 0.8rem; padding: 40px;">INITIALIZING DATA STREAM...</div>
+    <div class="grid">
+        <div class="stat-card">
+            <div class="label">System Integrity</div>
+            <div class="value" id="integrity">99.99%</div>
+        </div>
+        <div class="stat-card">
+            <div class="label">Total Settlement</div>
+            <div class="value" style="color:var(--gain)" id="rev">$412,050</div>
+        </div>
+    </div>
+
+    <div class="feed-header">Live Intelligence Stream</div>
+    <div id="main-stream">
+        <div style="text-align: center; color: #222; padding: 40px; font-size: 0.8rem;">ESTABLISHING CORE LINK...</div>
     </div>
 
     <script>
-        function updateLiveMetrics() {
-            document.getElementById('efficiency').innerText = (99.1 + Math.random() * 0.8).toFixed(2) + "%";
-            if(Math.random() > 0.9) {
-                let current = parseInt(document.getElementById('rev').innerText.replace('$', '').replace(',', ''));
-                document.getElementById('rev').innerText = "$" + (current + 100).toLocaleString();
+        function updateStats() {
+            document.getElementById('integrity').innerText = (99.95 + Math.random() * 0.04).toFixed(2) + "%";
+            if(Math.random() > 0.8) {
+                let val = parseInt(document.getElementById('rev').innerText.replace('$', '').replace(',', ''));
+                document.getElementById('rev').innerText = "$" + (val + 25).toLocaleString();
             }
         }
 
-        async function initSystem() {
-            setInterval(updateLiveMetrics, 2000);
-            fetchData();
-            setInterval(fetchData, 120000); // Auto-refresh every 2 mins
+        async function init() {
+            setInterval(updateStats, 3000);
+            await loadData();
+            // Refreshes data automatically every 60 seconds
+            setInterval(loadData, 60000);
         }
 
-        async function fetchData() {
-            const container = document.getElementById('main-feed');
+        async function loadData() {
+            const container = document.getElementById('main-stream');
             const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=281204146&single=true&output=csv';
 
             try {
                 const response = await fetch(url);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1);
+                const csvData = await response.text();
+                const rows = csvData.split('\n').slice(1);
                 container.innerHTML = '';
 
-                rows.forEach((row, index) => {
+                rows.forEach((row, i) => {
                     const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (cols.length >= 2) {
-                        let name = cols[0].replace(/"/g, "").trim();
-                        let stream = cols[1].replace(/"/g, "").trim();
+                        let entity = cols[0].replace(/"/g, "").trim();
+                        let diagnostic = cols[1].replace(/"/g, "").trim();
                         
+                        // FIX: Clean ni57q formatting
+                        diagnostic = diagnostic.replace(/ni57q/g, '<span class="ni-tag">ni57q</span>');
+
                         container.innerHTML += `
                             <div class="entity-box">
-                                <div class="entity-header">
-                                    <div class="entity-id">E-ID: ${1000 + index}</div>
-                                    <div style="font-size:0.5rem; color:#444;">ANALYSIS COMPLETE</div>
+                                <div class="entity-top">
+                                    <span>STREAM_REF: ${i+1024}</span>
+                                    <span>ANALYSIS: ACTIVE</span>
                                 </div>
                                 <div class="entity-body">
-                                    <div class="entity-name">${name}</div>
-                                    <div class="logic-stream">${stream}</div>
-                                    <div class="settlement-badge">SETTLEMENT_PATH: ni57q</div>
+                                    <div class="entity-name">${entity}</div>
+                                    <div class="diagnostic-text">${diagnostic}</div>
                                 </div>
                             </div>
                         `;
                     }
                 });
             } catch (e) {
-                container.innerHTML = "<div style='color:red; text-align:center;'>CONNECTION INTERRUPTED</div>";
+                container.innerHTML = "<div style='color:var(--warning); text-align:center;'>LINK TIMEOUT</div>";
             }
         }
     </script>
