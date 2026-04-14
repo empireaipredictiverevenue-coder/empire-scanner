@@ -3,20 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMPIRE AI // CORE TERMINAL</title>
+    <title>EMPIRE AI // COMMAND TERMINAL</title>
     <style>
         :root { 
             --empire-blue: #00d2ff; 
             --settlement-green: #39ff14; 
             --deep-bg: #000000; 
             --panel: #0d0d0d; 
-            --high-vis-text: #ffffff; /* Shifted to white for readability */
-            --sub-text: #b0b0b0; /* Lightened gray for secondary data */
+            --high-vis: #ffffff;
         }
         
         body { 
             background: var(--deep-bg); 
-            color: var(--high-vis-text); 
+            color: var(--high-vis); 
             font-family: -apple-system, system-ui, sans-serif; 
             margin: 0; 
             padding: 15px; 
@@ -29,7 +28,7 @@
             justify-content: space-between; 
             align-items: center; 
             padding: 15px 0; 
-            border-bottom: 1px solid #333; 
+            border-bottom: 1px solid var(--empire-blue); 
             margin-bottom: 25px; 
         }
         
@@ -38,15 +37,15 @@
 
         .sys-status { display: flex; align-items: center; font-size: 0.7rem; color: var(--settlement-green); font-weight: bold; }
         .pulse-dot { height: 8px; width: 8px; background: var(--settlement-green); border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px var(--settlement-green); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        /* ANALYTICS */
+        /* ANALYTICS - LOCKED IN EMPIRE BLUE */
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .stat-card { background: var(--panel); border: 1px solid #222; padding: 15px; border-radius: 10px; }
-        .stat-label { font-size: 0.6rem; color: var(--empire-blue); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1px; font-weight: bold; }
+        .stat-card { background: var(--panel); border: 2px solid var(--empire-blue); padding: 15px; border-radius: 10px; box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1); }
+        .stat-label { font-size: 0.65rem; color: var(--empire-blue); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1.5px; font-weight: 900; }
         .stat-value { font-size: 1.2rem; font-weight: 700; font-family: monospace; }
 
-        /* DATA CARDS */
+        /* LOGIC STREAMS */
         .entity-card { 
             background: var(--panel); 
             border: 1px solid #222; 
@@ -55,22 +54,21 @@
             overflow: hidden; 
         }
         
-        /* FIX: High-contrast Meta Bar */
         .entity-meta { 
             background: #1a1a1a; 
             padding: 10px 15px; 
             display: flex; 
             justify-content: space-between; 
             font-size: 0.7rem; 
-            color: #fff; /* White text for ID and Status */
+            color: var(--empire-blue); /* SYSTEM_ID now high-vis blue */
             font-family: monospace; 
-            font-weight: bold;
-            border-bottom: 1px solid #222;
+            font-weight: 900;
+            border-bottom: 1px solid #333;
         }
 
         .entity-body { padding: 20px; }
         .entity-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: #fff; }
-        .entity-diagnostic { font-size: 0.95rem; color: var(--sub-text); line-height: 1.5; }
+        .entity-diagnostic { font-size: 0.95rem; color: #b0b0b0; line-height: 1.5; }
         
         .ni-tag { 
             color: var(--settlement-green); 
@@ -78,21 +76,21 @@
             background: rgba(57, 255, 20, 0.1); 
             padding: 2px 5px; 
             border-radius: 4px; 
-            border: 1px solid rgba(57, 255, 20, 0.2);
         }
 
-        /* FIX: Readable Operations Log */
+        /* SATELLITE OPERATIONS LOG - FULL BLUE VISIBILITY */
+        .log-header { font-size: 0.65rem; color: var(--empire-blue); text-transform: uppercase; margin-bottom: 8px; font-weight: 900; letter-spacing: 2px; }
         .ops-log { 
-            margin-top: 30px; 
-            background: #0a0a0a; 
-            border: 1px solid #222; 
+            background: #050505; 
+            border: 2px solid var(--empire-blue); 
             padding: 12px; 
             font-family: monospace; 
-            font-size: 0.75rem; /* Increased size */
-            color: var(--empire-blue); /* High vis blue */
-            height: 70px; 
+            font-size: 0.75rem; 
+            color: var(--empire-blue); 
+            height: 90px; 
             overflow: hidden; 
             border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.05);
         }
     </style>
 </head>
@@ -100,44 +98,43 @@
 
     <div class="header">
         <div class="logo-text">EMPIRE<span class="logo-accent">AI</span></div>
-        <div class="sys-status"><div class="pulse-dot"></div> UPLINK: OPTIMAL</div>
+        <div class="sys-status"><div class="pulse-dot"></div> DIRECT SATELLITE FEED</div>
     </div>
 
     <div class="grid">
         <div class="stat-card">
-            <div class="stat-label">INTEGRITY</div>
+            <div class="stat-label">SYSTEM INTEGRITY</div>
             <div class="stat-value" id="uptime">99.99%</div>
         </div>
         <div class="stat-card">
-            <div class="stat-label">REVENUE</div>
+            <div class="stat-label">TOTAL SETTLEMENT</div>
             <div class="stat-value" style="color:var(--settlement-green)" id="rev">$482,100</div>
         </div>
     </div>
 
-    <div id="core-feed">
-        <div style="text-align: center; color: #444; padding: 40px;">INITIALIZING CORE FEED...</div>
-    </div>
+    <div id="core-feed"></div>
 
+    <div class="log-header">SATELLITE HANDSHAKE LOG:</div>
     <div class="ops-log" id="ops-log">
-        <div>[ SYSTEM_START ]</div>
+        <div>[ LINK_ESTABLISHED ]</div>
     </div>
 
     <script>
-        const logs = ["[ ENCRYPTION_ACTIVE ]", "[ SATELLITE_LINK_SECURED ]", "[ DATA_STREAM_SYNCED ]", "[ NI57Q_SETTLEMENT_LIVE ]"];
+        const logs = ["[ SATELLITE_SCAN_ACTIVE ]", "[ REVENUE_LEAK_IDENTIFIED ]", "[ ENCRYPTING_UPLINK ]", "[ NI57Q_SETTLEMENT_SYNC ]", "[ SATELLITE_HANDSHAKE_VERIFIED ]"];
 
         function runLogs() {
             const logBox = document.getElementById('ops-log');
             const entry = document.createElement('div');
             entry.innerText = "> " + logs[Math.floor(Math.random() * logs.length)];
             logBox.prepend(entry);
-            if (logBox.children.length > 4) logBox.lastChild.remove();
+            if (logBox.children.length > 5) logBox.lastChild.remove();
         }
 
         function updateMetrics() {
             document.getElementById('uptime').innerText = (99.97 + Math.random() * 0.02).toFixed(2) + "%";
             if(Math.random() > 0.8) {
                 let val = parseInt(document.getElementById('rev').innerText.replace('$', '').replace(',', ''));
-                document.getElementById('rev').innerText = "$" + (val + 50).toLocaleString();
+                document.getElementById('rev').innerText = "$" + (val + 100).toLocaleString();
             }
         }
 
@@ -169,7 +166,7 @@
                             <div class="entity-card">
                                 <div class="entity-meta">
                                     <span>SYSTEM_ID: 00${i+1}</span>
-                                    <span style="color:var(--settlement-green)">LIVE_FEED</span>
+                                    <span style="color:var(--settlement-green)">ENCRYPTED_FEED</span>
                                 </div>
                                 <div class="entity-body">
                                     <div class="entity-title">${title}</div>
