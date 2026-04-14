@@ -3,154 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMPIRE AI // COMMAND TERMINAL</title>
+    <title>EMPIRE AI // MULTI-STACK</title>
     <style>
-        :root { 
-            --empire-blue: #00d2ff; 
-            --settlement-green: #39ff14; 
-            --deep-bg: #000000; 
-            --panel: #0d0d0d; 
-            --high-vis: #ffffff;
-        }
+        :root { --blue: #00d2ff; --green: #39ff14; --bg: #000; --panel: #0d0d0d; }
+        body { background: var(--bg); color: #fff; font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 15px; }
         
-        body { 
-            background: var(--deep-bg); 
-            color: var(--high-vis); 
-            font-family: -apple-system, system-ui, sans-serif; 
-            margin: 0; 
-            padding: 15px; 
-            -webkit-font-smoothing: antialiased;
-        }
+        /* NAV TABS */
+        .nav-container { display: flex; gap: 5px; margin-bottom: 20px; border-bottom: 1px solid #222; padding-bottom: 10px; overflow-x: auto; }
+        .tab { padding: 8px 15px; border-radius: 6px; font-size: 0.65rem; font-weight: 900; text-transform: uppercase; cursor: pointer; border: 1px solid #333; color: #555; white-space: nowrap; }
+        .tab.active { border-color: var(--blue); color: var(--blue); background: rgba(0, 210, 255, 0.05); }
 
         /* HEADER */
-        .header { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px 0; 
-            border-bottom: 1px solid var(--empire-blue); 
-            margin-bottom: 25px; 
-        }
-        
-        .logo-text { font-weight: 900; font-size: 1.1rem; letter-spacing: 4px; text-transform: uppercase; }
-        .logo-accent { color: var(--empire-blue); }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .logo { font-weight: 900; letter-spacing: 3px; font-size: 1rem; }
+        .status { color: var(--green); font-size: 0.6rem; font-weight: bold; display: flex; align-items: center; }
+        .dot { height: 6px; width: 6px; background: var(--green); border-radius: 50%; margin-right: 6px; box-shadow: 0 0 8px var(--green); }
 
-        .sys-status { display: flex; align-items: center; font-size: 0.7rem; color: var(--settlement-green); font-weight: bold; }
-        .pulse-dot { height: 8px; width: 8px; background: var(--settlement-green); border-radius: 50%; margin-right: 10px; box-shadow: 0 0 10px var(--settlement-green); animation: pulse 2s infinite; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        /* DATA CARDS */
+        .card { background: var(--panel); border: 1px solid #222; border-radius: 12px; margin-bottom: 15px; overflow: hidden; }
+        .card-meta { background: #1a1a1a; padding: 8px 15px; display: flex; justify-content: space-between; font-size: 0.65rem; color: var(--blue); font-family: monospace; font-weight: bold; }
+        .card-body { padding: 15px; }
+        .card-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 8px; }
+        .card-data { font-size: 0.9rem; color: #b0b0b0; line-height: 1.4; }
+        .leak-tag { color: #ff4444; font-weight: bold; }
 
-        /* ANALYTICS - LOCKED IN EMPIRE BLUE */
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .stat-card { background: var(--panel); border: 2px solid var(--empire-blue); padding: 15px; border-radius: 10px; box-shadow: inset 0 0 10px rgba(0, 210, 255, 0.1); }
-        .stat-label { font-size: 0.65rem; color: var(--empire-blue); text-transform: uppercase; margin-bottom: 6px; letter-spacing: 1.5px; font-weight: 900; }
-        .stat-value { font-size: 1.2rem; font-weight: 700; font-family: monospace; }
-
-        /* LOGIC STREAMS */
-        .entity-card { 
-            background: var(--panel); 
-            border: 1px solid #222; 
-            margin-bottom: 15px; 
-            border-radius: 12px; 
-            overflow: hidden; 
-        }
-        
-        .entity-meta { 
-            background: #1a1a1a; 
-            padding: 10px 15px; 
-            display: flex; 
-            justify-content: space-between; 
-            font-size: 0.7rem; 
-            color: var(--empire-blue); /* SYSTEM_ID now high-vis blue */
-            font-family: monospace; 
-            font-weight: 900;
-            border-bottom: 1px solid #333;
-        }
-
-        .entity-body { padding: 20px; }
-        .entity-title { font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; color: #fff; }
-        .entity-diagnostic { font-size: 0.95rem; color: #b0b0b0; line-height: 1.5; }
-        
-        .ni-tag { 
-            color: var(--settlement-green); 
-            font-weight: bold; 
-            background: rgba(57, 255, 20, 0.1); 
-            padding: 2px 5px; 
-            border-radius: 4px; 
-        }
-
-        /* SATELLITE OPERATIONS LOG - FULL BLUE VISIBILITY */
-        .log-header { font-size: 0.65rem; color: var(--empire-blue); text-transform: uppercase; margin-bottom: 8px; font-weight: 900; letter-spacing: 2px; }
-        .ops-log { 
-            background: #050505; 
-            border: 2px solid var(--empire-blue); 
-            padding: 12px; 
-            font-family: monospace; 
-            font-size: 0.75rem; 
-            color: var(--empire-blue); 
-            height: 90px; 
-            overflow: hidden; 
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 210, 255, 0.05);
-        }
+        .ops-log { background: #050505; border: 1px solid var(--blue); padding: 10px; font-family: monospace; font-size: 0.7rem; color: var(--blue); height: 60px; overflow: hidden; border-radius: 8px; margin-top: 20px; }
     </style>
 </head>
 <body onload="init()">
 
     <div class="header">
-        <div class="logo-text">EMPIRE<span class="logo-accent">AI</span></div>
-        <div class="sys-status"><div class="pulse-dot"></div> DIRECT SATELLITE FEED</div>
+        <div class="logo">EMPIRE<span style="color:var(--blue)">AI</span></div>
+        <div class="status"><div class="dot"></div> MULTI-STACK LIVE</div>
     </div>
 
-    <div class="grid">
-        <div class="stat-card">
-            <div class="stat-label">SYSTEM INTEGRITY</div>
-            <div class="stat-value" id="uptime">99.99%</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-label">TOTAL SETTLEMENT</div>
-            <div class="stat-value" style="color:var(--settlement-green)" id="rev">$482,100</div>
-        </div>
+    <div class="nav-container">
+        <div class="tab active" onclick="switchStack('logistics', this)">Logistics</div>
+        <div class="tab" onclick="switchStack('orlando', this)">Orlando HVAC</div>
+        <div class="tab" onclick="switchStack('roofing', this)">Roofing Leads</div>
     </div>
 
-    <div id="core-feed"></div>
+    <div id="stack-feed">
+        <div style="text-align: center; color: #444; padding: 40px;">LOADING CORE STACK...</div>
+    </div>
 
-    <div class="log-header">SATELLITE HANDSHAKE LOG:</div>
     <div class="ops-log" id="ops-log">
-        <div>[ LINK_ESTABLISHED ]</div>
+        <div>> SYNCING ORLANDO DATA...</div>
     </div>
 
     <script>
-        const logs = ["[ SATELLITE_SCAN_ACTIVE ]", "[ REVENUE_LEAK_IDENTIFIED ]", "[ ENCRYPTING_UPLINK ]", "[ NI57Q_SETTLEMENT_SYNC ]", "[ SATELLITE_HANDSHAKE_VERIFIED ]"];
+        const SHEETS = {
+            logistics: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=281204146&single=true&output=csv',
+            orlando: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=0&single=true&output=csv', // Update GID
+            roofing: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=123456&single=true&output=csv' // Replace with your Roofing Sheet GID
+        };
 
-        function runLogs() {
-            const logBox = document.getElementById('ops-log');
-            const entry = document.createElement('div');
-            entry.innerText = "> " + logs[Math.floor(Math.random() * logs.length)];
-            logBox.prepend(entry);
-            if (logBox.children.length > 5) logBox.lastChild.remove();
-        }
+        let currentStack = 'logistics';
 
-        function updateMetrics() {
-            document.getElementById('uptime').innerText = (99.97 + Math.random() * 0.02).toFixed(2) + "%";
-            if(Math.random() > 0.8) {
-                let val = parseInt(document.getElementById('rev').innerText.replace('$', '').replace(',', ''));
-                document.getElementById('rev').innerText = "$" + (val + 100).toLocaleString();
-            }
+        function switchStack(stack, el) {
+            currentStack = stack;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            fetchData();
         }
 
         async function init() {
-            setInterval(updateMetrics, 3000);
-            setInterval(runLogs, 4000);
-            await stream();
-            setInterval(stream, 60000);
+            fetchData();
+            setInterval(() => {
+                const logs = ["[ SATELLITE_FIX_STABLE ]", "[ SYNCING_ORLANDO_REVENUE ]", "[ ROOF_SCAN_COMPLETE ]"];
+                const logBox = document.getElementById('ops-log');
+                const entry = document.createElement('div');
+                entry.innerText = "> " + logs[Math.floor(Math.random() * logs.length)];
+                logBox.prepend(entry);
+                if (logBox.children.length > 3) logBox.lastChild.remove();
+            }, 4000);
         }
 
-        async function stream() {
-            const container = document.getElementById('core-feed');
-            const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTrqH0eRL_PerKtkQ_TV42wtmeqrm_uBiSP7g9Zsrz43m4IfHwUJrJxka3Nhac2RP65vGCPO4GVR_4K/pub?gid=281204146&single=true&output=csv';
-
+        async function fetchData() {
+            const container = document.getElementById('stack-feed');
             try {
-                const response = await fetch(url);
+                const response = await fetch(SHEETS[currentStack]);
                 const csv = await response.text();
                 const rows = csv.split('\n').slice(1);
                 container.innerHTML = '';
@@ -159,25 +91,32 @@
                     const data = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if (data.length >= 2) {
                         let title = data[0].replace(/"/g, "").trim();
-                        let text = data[1].replace(/"/g, "").trim();
-                        text = text.replace(/ni57q/g, '<span class="ni-tag">ni57q</span>');
+                        let body = data[1].replace(/"/g, "").trim();
+                        
+                        // Highlight Settlement Code
+                        body = body.replace(/ni57q/g, '<span style="color:var(--green)">ni57q</span>');
+                        
+                        // Fake visual logic for Orlando Leak detection
+                        if(currentStack === 'orlando') {
+                            body += ' <br><span class="leak-tag">ESTIMATED REVENUE LEAK: $1.2M+</span>';
+                        }
 
                         container.innerHTML += `
-                            <div class="entity-card">
-                                <div class="entity-meta">
-                                    <span>SYSTEM_ID: 00${i+1}</span>
-                                    <span style="color:var(--settlement-green)">ENCRYPTED_FEED</span>
+                            <div class="card">
+                                <div class="card-meta">
+                                    <span>ID: ${currentStack.toUpperCase()}_0${i+1}</span>
+                                    <span>ANALYSIS: ACTIVE</span>
                                 </div>
-                                <div class="entity-body">
-                                    <div class="entity-title">${title}</div>
-                                    <div class="entity-diagnostic">${text}</div>
+                                <div class="card-body">
+                                    <div class="card-title">${title}</div>
+                                    <div class="card-data">${body}</div>
                                 </div>
                             </div>
                         `;
                     }
                 });
             } catch (e) {
-                container.innerHTML = "CONNECTION ERROR";
+                container.innerHTML = "CONNECTION ERROR: CHECK SHEET GID";
             }
         }
     </script>
